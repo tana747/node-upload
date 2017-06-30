@@ -13,11 +13,12 @@ var ContentSchema = new Schema({
   description: String,
   name: String,
   type: String,
+  tag: String,
 });
 mongoose.model('Content', ContentSchema);
 var Content = mongoose.model('Content');
 //user collection
-var UserSchema = new Schema({username: String, email: String});
+var UserSchema = new Schema({username: String, email: String,});
 mongoose.model('User', UserSchema);
 var User = mongoose.model('User');
 // uuid
@@ -85,7 +86,8 @@ app.post('/upload', function (req, res, next) {
         title: '' + req.body.title,
         des: '' + req.body.des,
         type: '' + type,
-        uri: '/file/image/' + req.files.file.name,
+        tag: '' + req.body.tag,
+        uri: '/file/image/' + req.files.file.name
       });
     });
   }
@@ -99,7 +101,8 @@ app.post('/upload', function (req, res, next) {
         title: '' + req.body.title,
         des: '' + req.body.des,
         type: '' + type,
-        uri: '/file/video/' + req.files.file.name,
+        tag: '' + req.body.tag,
+        uri: '/file/video/' + req.files.file.name
       });
     });
   }
@@ -108,7 +111,14 @@ app.post('/upload', function (req, res, next) {
   var ext = getExtension(req.files.file.name);
   req.files.file.name = uuid + "." + ext;
   // Use the mv() method to place the file somewhere on your server
-  var content = new Content({user: req.body.user, title: req.body.title, description: req.body.des, name: req.files.file.name, type: type});
+  var content = new Content({
+    user: req.body.user,
+    title: req.body.title,
+    description: req.body.des,
+    name: req.files.file.name,
+    type: type,
+    tag: req.body.tag,
+  });
   content.save();
   // sampleFile.mv('./uploads/' + req.files.file.name, function (err) {
   //   if (err)
@@ -125,7 +135,7 @@ app.get('/file/image/:filename', function (req, res) {
   if (!files || files.length === 0) {
     return res
       .status(404)
-      .json({responseCode: 1, responseMessage: "error"});
+      .json({responseCode: 1, responseMessage: "error",});
   }
   res.sendFile(__dirname + '/uploadsImage/' + files);
 });
@@ -134,7 +144,7 @@ app.get('/file/video/:filename', function (req, res) {
   if (!files || files.length === 0) {
     return res
       .status(404)
-      .json({responseCode: 1, responseMessage: "error"});
+      .json({responseCode: 1, responseMessage: "error",});
   }
   res.sendFile(__dirname + '/uploadsVdo/' + files);
 });
@@ -144,7 +154,7 @@ app.get('/user', function (req, res) {
 });
 app.post('/create', function (req, res, next) {
   console.log(req.body.username);
-  var user = new User({username: req.body.username, email: req.body.email});
+  var user = new User({username: req.body.username, email: req.body.email,});
   user.save(function (err) {
     if (err) {
       return next(err);
