@@ -1,12 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
 <body>
+  <h1 style="text-align:center"><<<<<<< CONTENT UPLOAD >>>>>>></h1>
+</br>
+<a href="/user" type="button" class="btn btn-success col-md-offset-7">Create user</button></a>
+</br>
 
-<form action="/upload" method="post" enctype="multipart/form-data">
-    Select image to upload:
-    <input type="file" name="file" id="file">
-    <input type="submit" value="Upload Image" name="submit">
+<div id="test"></div>
+<form action="/upload" method="post" enctype="multipart/form-data" class="col-md-4 col-md-offset-4">
+  <div class="form-group">
+    <label for="exampleSelect1">Select User</label>
+    <select class="form-control" id="user" name="user">
+      <!-- <option value="1">AAAAAA</option>
+      <option value="2">BBBBBB</option>
+      <option value="3">CCCCCC</option>
+      <option value="4">DDDDDD</option>
+      <option value="5">EEEEEE</option> -->
+    </select>
+
+  </div>
+  <div class="form-group">
+   <label>Title:</label>
+   <input type="text" name="title" class="form-control" id="title" >
+ </div>
+ <div class="form-group">
+  <label>Description:</label>
+  <input type="text" name="des" class="form-control" id="des" >
+</div>
+
+    <label>Select image to upload:</label>
+
+    <input class="form-control-file" type="file" name="file" id="file" onChange="uploadOnChange(this)">
+    <!-- <input type="hidden" value="" name="hd1" id="hdFile"/> -->
+  </br><input class="btn btn-primary" type="submit" value="Upload" name="submit" >
+
 </form>
+<script>
 
+// var data = JSON.stringify({
+//   "name": "8888888"
+// });
+
+var xhr = new XMLHttpRequest();
+xhr.withCredentials = true;
+
+xhr.addEventListener("readystatechange", function () {
+  if (this.readyState === 4) {
+    // console.log(this.responseText);
+     var data = JSON.parse(this.responseText);
+     console.log(typeof data);
+
+     data.forEach(function(element) {
+       console.log(element);
+});
+      display(data);
+
+
+  }
+});
+
+xhr.open("GET", "http://0.0.0.0:3002/users");
+xhr.setRequestHeader("content-type", "application/json");
+xhr.setRequestHeader("cache-control", "no-cache");
+
+xhr.send();
+
+
+function display(data) {
+console.log(data);
+for (var i = 0; i < data.length; i++) {
+    console.log(data[i]._id);
+
+var att = document.createAttribute("value");        // Create a "href" attribute
+//att.value = "https://www.w3schools.com";
+att.value = ""+data[i]._id;            // Set the value of the href attribute
+
+var el = document.getElementById('user'),
+    // Make a new div
+    elChild = document.createElement('option');
+
+// Give the new div some content
+elChild.innerHTML = ''+data[i].username;
+elChild.setAttributeNode(att);
+
+// Jug it into the parent element
+el.appendChild(elChild);
+
+}
+}
+// var x = {_id:"5151", username:"jkdsfljd;u"};
+// display();
+
+
+
+
+</script>
 </body>
 </html>
